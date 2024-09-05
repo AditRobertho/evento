@@ -27,5 +27,3 @@ export default function Home() {
     </main>
   );
 }
-
-// ---------------241----------------

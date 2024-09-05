@@ -4,23 +4,32 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import { capitalize } from "@/app/lib/utils";
 import { Metadata } from "next";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   params: {
     city: string;
   };
 };
+type EventPageProps = Props & {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = params.city;
+
   return {
     title:
       city === "all" ? "All Events" : `Events in ${capitalize(city)} - Evento`,
   };
 }
 
-export default async function EventsPage({ params }: Props) {
+export default async function EventsPage({
+  params,
+  searchParams,
+}: EventPageProps) {
   const city = params.city;
+  const page = searchParams.page ?? "1";
 
   return (
     <main className="flex flex-col items-center py-24 px-[20px] min-h-[110vh]">
@@ -30,7 +39,7 @@ export default async function EventsPage({ params }: Props) {
       </H1>
 
       <Suspense fallback={<Loading />}>
-        <EventList city={city} />
+        <EventList city={city} page={+page} />
       </Suspense>
     </main>
   );
